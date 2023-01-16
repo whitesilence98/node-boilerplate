@@ -4,6 +4,7 @@ import crypto from "crypto";
 
 // import {IOrganization} from "../organization/organization.model";
 
+type UserRole = "Admin" | "Modder" | "User";
 export interface IUser {
    name: string;
    email: string;
@@ -17,6 +18,7 @@ export interface IUser {
    createPasswordResetToken: Function;
    changePasswordAfter: Function;
    // organization: IOrganization;
+   userRole: UserRole;
 }
 
 const schema = new Schema<IUser>({
@@ -43,6 +45,7 @@ const schema = new Schema<IUser>({
       type: Schema.Types.ObjectId,
       ref: "Organization",
    },
+   userRole: {type: String, default: "User"},
 });
 
 schema.pre("save", function (next) {

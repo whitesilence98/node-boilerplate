@@ -1,13 +1,16 @@
 import {Request, Response, NextFunction} from "express";
+import {validationResult} from "express-validator";
 
 import ProductModel from "./product.model";
 import * as productService from "./product.service";
-import {validationResult} from "express-validator";
+
+import {paginationHandler} from "utils/api-builder.util";
 
 export const find = async (req: Request, res: Response, next: NextFunction) => {
    try {
-      const product = await productService.find(req.query);
-      res.json({records: product, pagination: {}, fromCache: false});
+      const pagination = await paginationHandler(ProductModel, req.params, req.query);
+      const records = await productService.find(req.query);
+      res.json({records, pagination, fromCache: false});
    } catch (err) {
       next(err);
    }

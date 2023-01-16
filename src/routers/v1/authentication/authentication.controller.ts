@@ -6,12 +6,14 @@ import _size from "lodash/size";
 import {AppError, catchAsync} from "utils/error.util";
 
 import UserModel from "../user/user.model";
+
 import {STATUS_CODE} from "constants/common.constants";
+import {AUTH_TOKEN_KEY, SECRET_KEY} from "constants/auth.constants";
 
 const MILLISECOND_EXPIRES_TIME = 24 * 60 * 60 * 1000;
 
 const signToken = ({res, user}: any) => {
-   const token = jwt.sign({email: user.email, id: user._id}, "iloveyou", {
+   const token = jwt.sign({email: user.email, id: user._id}, SECRET_KEY, {
       expiresIn: "2h",
    });
 
@@ -22,13 +24,13 @@ const signToken = ({res, user}: any) => {
    cookieOptions.secure = true;
    cookieOptions.httpOnly = true;
 
-   const {_id, email, name} = user;
+   const {_id, email, name, userRole} = user;
 
-   res.cookie("UFO", token, cookieOptions);
+   res.cookie(AUTH_TOKEN_KEY, token, cookieOptions);
    res.status(200).json({
       status: "success",
       token,
-      data: {user: {_id, email, name}},
+      data: {user: {_id, email, name, userRole}},
    });
 };
 

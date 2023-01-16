@@ -1,7 +1,7 @@
 import express from "express";
 import api from "routers";
-
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 import logger from "utils/logger.util";
 
@@ -17,18 +17,16 @@ export const runServer = () => {
    // parse application/json
    app.use(express.json());
    app.use(express.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
-
+   app.use(cookieParser());
    //cors
-   app.use(cors({origin: "http://localhost:4000"}));
+   app.use(cors({origin: "http://localhost:3000"}));
    // middleware
    app.use(loggerMiddleware);
-
    //api
    app.use("/api", api);
 
    //error
    app.use(errorHandlerMiddleware);
-
    // app.listen(process.env.SERVER_PORT, () => {
    //    logger.info(`✅ Server is running at http://localhost:${process.env.SERVER_PORT}`);
    // });
